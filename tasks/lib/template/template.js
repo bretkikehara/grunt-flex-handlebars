@@ -1,0 +1,1 @@
+this["{{opts.namespace}}"]["{{opts.name}}"] = Handlebars.template({{{template}}});
