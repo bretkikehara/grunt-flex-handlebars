@@ -43,13 +43,16 @@ module.exports = function(grunt) {
 
                         return true;
                     }),
-                    output = files.map(function(filepath) {
-                        var filecontent = grunt.file.read(filepath);
-                        libhandlebars.compileTemplate(filecontent, options.compilerOptions);
-                    }).join('\n');
+                    wrapperObj = {
+                        templates: files.map(function(filepath) {
+                            var filecontent = grunt.file.read(filepath);
+                            libhandlebars.compileTemplate(filecontent, options.compilerOptions);
+                        })
+                    };
 
                 // Write joined contents to destination filepath.
-                grunt.file.write(file.dest, output.join(grunt.util.normalizelf(options.separator)));
+
+                grunt.file.write(file.dest, libhandlebars.createWrapperFile(wrapperObj));
 
                 // Print a success message.
                 grunt.log.writeln('File "' + file.dest + '" created.');

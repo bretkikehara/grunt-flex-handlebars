@@ -7,7 +7,10 @@
  */
 
 var Handlebars = require('handlebars'),
-    fs = require('fs');
+    fs = require('fs'),
+    readOptions = {
+        encoding: 'utf-8'
+    };
 
 module.exports = {
     init: function(options) {
@@ -16,23 +19,35 @@ module.exports = {
             };
 
         this.initCreateTemplateFile(opts);
-        this.isInit = true;
+        this.initCreateWrapperFile(opts);
+
+        return this;
     },
     isInit: function() {
         return !!(this.createTemplateFile);
     },
     initCreateTemplateFile : function(opts) {
-        var templateFile = opts.templateFile ||  __dirname + '/template/template.js',
-            templateFileContent = fs.readFileSync(templateFile, {
-                encoding: 'utf-8'
-            });
+        var defaultTemplate = __dirname + '/template/template.js',
+            templateFile = opts.templateFile || defaultTemplate,
+            templateFileContent = fs.readFileSync(templateFile, readOptions);
 
         // create template handler.
         if (!templateFileContent) {
-            templateFileContent = '{{{template}}}';
+            templateFileContent = fs.readFileSync(defaultTemplate, readOptions);
         }
 
         this.createTemplateFile = Handlebars.compile(Handlebars.parse(templateFileContent));
+    },
+    initCreateWrapperFile : function(opts) {
+        var defaultWrapper = __dirname + '/template/wrapper.js',
+            wrapperFile = opts.wrapperFile || defaultWrapper,
+            wrapperFileContent = fs.readFileSync(wrapperFile, readOptions);
+
+        if (!wrapperFileContent) {
+            wrapperFileContent = fs.readFileSync(defaultWrapper, readOptions);
+        }
+
+        this.createWrapperFile = Handlebars.compile(Handlebars.parse(wrapperFileContent));
     },
     compileTemplate : function(fileContent, compilerOptions) {
         if (this.isInit()) {

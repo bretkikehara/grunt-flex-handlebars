@@ -1,0 +1,1 @@
+Y.namespace("{{opts.namespace}}")["{{opts.name}}"] = Y.Handlebars.template({{{template}}});
