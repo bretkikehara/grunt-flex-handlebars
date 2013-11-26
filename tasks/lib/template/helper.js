@@ -1,0 +1,1 @@
+Handlebars.registerHelper("{{helper-helper-name filepath}}", {{{helper}}});

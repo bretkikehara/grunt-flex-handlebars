@@ -90,9 +90,10 @@ exports.handlebars = {
     },
     writeDefaultFile: function(test) {
         var os = require('os'),
-            cp = require('child_process');
+            cp = require('child_process'),
+            cmd;
 
-        test.expect(1);
+        test.expect(3);
 
         cmd = [
             (os.platform() === 'win32' ? 'grunt.cmd' : 'grunt'),
@@ -104,20 +105,40 @@ exports.handlebars = {
             'handlebars'
         ].join(' ');
         cp.exec(cmd, function(error, stdout, stderr) {
-            if (error !== null) {
-              console.log('exec error: ' + error);
+
+            console.log(stdout);
+            console.log(stderr);
+
+            if (error) {
+              console.log(error);
             }
 
             // load compiled script into memory.
             GLOBAL.Handlebars = require('handlebars');
             script = require(__dirname + '/../tmp/handlebars-template.js');
 
-            // execute compiled template
-            actual = script.JST['template-1']({
-                name: 'Bret'
+            // execute without helper
+            actual = script.JST['greeting-without-helper']({
+                name: 'Name'
             });
+            test.equal(actual, '<p>Hello Name</p>', 'Execute compiled template');
 
-            test.equal(actual, '<p>Hello Bret</p>', 'Compiled default template');
+            // execute with internal helper
+            actual = script.JST['greeting-with-helper']({
+                name: 'Name'
+            });
+            test.equal(actual, '<p>Hello Name!</p>', 'Execute compiled template');
+
+            // execute with external helper (Example: https://github.com/assemble/handlebars-helpers)
+            Handlebars.registerHelper('external-view-name', function(name) {
+                return 'external';
+            });
+            actual = script.JST['greeting-with-external-helper']({
+                name: 'Name'
+            });
+            test.equal(actual, '<p>Hello external</p>', 'Execute compiled template');
+
+
             test.done();
         });
     }

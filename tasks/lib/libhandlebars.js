@@ -9,28 +9,73 @@
 var Handlebars = require('handlebars'),
     grunt = require('grunt'),
     fs = require('fs'),
-    REGEX_FILE_NAME = /^.+\/([^\/]+)\..+$/i,
+    REGEX_TEMPLATE_PATTERN = /^.+\/template-(.+)\.hbs/i,
+    REGEX_HELPER_PATTERN = /^.+\/helper-(.+)\.hbs/i,
     readOptions = {
         encoding: 'utf-8'
     };
 
 var libhandlebars = {
-    getDefaultOptions: function() {
-        return {
+    getDefaultOptions: function(options) {
+        var defaultOptions = {
             separator: grunt.util.linefeed + grunt.util.linefeed,
-            'helper-template-name': function(filepath) {
-                return filepath.replace(REGEX_FILE_NAME, "$1");
+            templatePattern: REGEX_TEMPLATE_PATTERN,
+            helperPattern: REGEX_HELPER_PATTERN,
+            'helper-template-name': function() {
+                var pattern = this.templatePattern;
+                return function(filepath) {
+                    return filepath.replace(pattern, "$1");
+                }
+            },
+            'helper-helper-name': function() {
+                var pattern = this.helperPattern;
+                return function(filepath) {
+                    return filepath.replace(pattern, "$1");
+                }
             },
             opts: {
                 namespace: 'JST'
             }
         };
+
+        for (var key in options) {
+            if (options.hasOwnProperty(key)) {
+                if (Object.prototype.toString.call(options[key]) === '[object Object]') {
+                    for (var key2 in options[key]) {
+                        if (options[key].hasOwnProperty(key2)) {
+                            defaultOptions[key][key2] = options[key][key2];
+                        }
+                    }
+                }
+                else {
+                    defaultOptions[key] = options[key];
+                }
+            }
+        }
+
+        return defaultOptions;
+    },
+    patternFilter: function(pattern) {
+        return function(filepath) {
+            // Remove nonexistent files (it's up to you to filter or warn here).
+            if (pattern && !pattern.test(filepath)) {
+                return false;
+            }
+            else if (!grunt.file.exists(filepath)) {
+                grunt.log.warn('Source file "' + filepath + '" not found.');
+                return false;
+            }
+
+            return true;
+        };
     },
     init: function(options) {
-        var opts = options || libhandlebars.getDefaultOptions();
+        var opts = libhandlebars.getDefaultOptions(options);
 
-        Handlebars.registerHelper('helper-template-name', opts['helper-template-name']);
+        Handlebars.registerHelper('helper-helper-name', opts['helper-helper-name']());
+        Handlebars.registerHelper('helper-template-name', opts['helper-template-name']());
 
+        this.initCreateHelperFile(opts);
         this.initCreateTemplateFile(opts);
         this.initCreateWrapperFile(opts);
 
@@ -38,6 +83,18 @@ var libhandlebars = {
     },
     isInit: function() {
         return !!(this.createTemplateFile);
+    },
+    initCreateHelperFile: function(opts) {
+        var defaultHelper = __dirname + '/template/helper.js',
+            helperFile = opts.helperFile || defaultHelper,
+            helperFileContent = fs.readFileSync(helperFile, readOptions);
+
+        // create template handler.
+        if (!helperFileContent) {
+            helperFileContent = fs.readFileSync(defaultPartial, readOptions);
+        }
+
+        this.createHelperFile = Handlebars.compile(Handlebars.parse(helperFileContent));
     },
     initCreateTemplateFile : function(opts) {
         var defaultTemplate = __dirname + '/template/template.js',

@@ -35,49 +35,23 @@ Default: `linefeed + linefeed`
 
 Concatenated files will be joined on this string.
 
-#### partialRegex
-Type: `Regexp`  
-Default: `/^_/`
+#### helperPattern
+Type: `Regular Express`
+Default: /^.+\/helper-(.+)\.hbs/i
 
-This option accepts a regex that defines the prefix character that is used to identify Handlebars partial files.
+#### partialPattern
+Type: `Regular Express`
+Default: /^.+\/partial-(.+)\.hbs/i
 
-``` javascript
-// assumes partial files would be prefixed with "par_" ie: "par_header.hbs"
-options: {
-  partialRegex: /^par_/
-}
-```
+#### templatePattern
+Type: `Regular Express`
+Default: /^.+\/template-(.+)\.hbs/i
 
-#### partialsPathRegex
-Type: `Regexp`  
-Default: `/./`
+#### opts
+Type: `Object`
+Default: 
 
-This option accepts a regex that defines the path to a directory of Handlebars partials files. The example below shows how to mark every file in a specific directory as a partial.
-
-``` javascript
-options: {
-  partialRegex: /.*/,
-  partialsPathRegex: /\/partials\//
-}
-```
-
-#### compilerOptions
-Type `Object`  
-Default: `{}`
-
-This option allows you to specify a hash of options which will be passed directly to the Handlebars compiler.
-
-``` javascript
-options: {
-  compilerOptions: {
-    knownHelpers: {
-      "my-helper": true,
-      "another-helper": true
-    },
-    knownHelpersOnly: true
-  }
-}
-```
+Options that will be passed to the underlying Handlebars template. For example, namespace can be called using {{opts.namespace}} in the generator templates.
 
 ### Usage Examples
 
@@ -98,7 +72,7 @@ handlebars: {
 
 ## Release History
 
-
+ * 2013-11-26   v0.0.2   First stable code to create templates.
  * 2013-11-21   v0.0.1   Refactored from grunt-contrib-handlebars into individual repo.
 
 ---
@@ -108,4 +82,4 @@ handlebars: {
 
 Author: [Tim Branyen](http://tbranyen.com)
 
-Source for the original code ca be found at [https://github.com/gruntjs/grunt-contrib-handlebars](https://github.com/gruntjs/grunt-contrib-handlebars).
+Source for the original code can be found at [https://github.com/gruntjs/grunt-contrib-handlebars](https://github.com/gruntjs/grunt-contrib-handlebars).
