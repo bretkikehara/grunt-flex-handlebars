@@ -5,7 +5,7 @@
  * Copyright (c) 2013 Bret K. Ikehara
  * Licensed under the MIT license.
  */
-var libdir = __dirname + '/../tasks/lib/handlebars-template.js',
+var libdir = __dirname + '/../tasks/lib/libhandlebars.js',
     fs = require('fs'),
     writeOptions = {
         encoding: 'utf-8'

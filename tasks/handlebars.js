@@ -9,7 +9,7 @@
 module.exports = function(grunt) {
     "use strict";
 
-    var libhandlebars = require('./lib/handlebars-template.js'),
+    var libhandlebars = require('./lib/libhandlebars.js'),
         Handlebars = require('Handlebars'),
         handleFilter = function(filepath) {
             // Remove nonexistent files (it's up to you to filter or warn here).
@@ -26,7 +26,8 @@ module.exports = function(grunt) {
         'Compile Handlebars templates and partials using Handlebars',
         function() {
 
-            var options = this.options(libhandlebars.getDefaultOptions());
+            var options = this.options(libhandlebars.getDefaultOptions()),
+                done = this.async();
             libhandlebars.init(options);
 
             grunt.verbose.writeflags(options, 'Options');
@@ -62,6 +63,8 @@ module.exports = function(grunt) {
                 // Print a success message.
                 grunt.log.writeln('File "' + file.dest + '" created.');
             }, this);
+
+            done();
         }
     );
 };
