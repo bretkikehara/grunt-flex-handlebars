@@ -26,8 +26,7 @@ module.exports = function(grunt) {
         'Compile Handlebars templates and partials using Handlebars',
         function() {
 
-            var options = this.options(libhandlebars.getDefaultOptions()),
-                done = this.async();
+            var options = this.options(libhandlebars.getDefaultOptions());
             libhandlebars.init(options);
 
             grunt.verbose.writeflags(options, 'Options');
@@ -35,36 +34,39 @@ module.exports = function(grunt) {
             /**
             * Run the program.
             */
-            this.files.forEach(function(file) {
-                var files = file.src.filter(handleFilter),
-                    wrapperObj = {
-                        templates: files.map(function(filepath) {
-                            var filecontent = grunt.file.read(filepath),
-                                precompiled = Handlebars.precompile(Handlebars.parse(filecontent)),
-                                template;
+            if (this.files.length > 0) {
+                this.files.forEach(function(file) {
+                    var files = file.src.filter(handleFilter),
+                        wrapperObj = {
+                            templates: files.map(function(filepath) {
+                                var filecontent = grunt.file.read(filepath),
+                                    precompiled = Handlebars.precompile(Handlebars.parse(filecontent)),
+                                    template;
 
-                            template = libhandlebars.createTemplateFile({
-                                filepath: filepath,
-                                template: precompiled,
-                                opts: options.opts
-                            });
+                                template = libhandlebars.createTemplateFile({
+                                    filepath: filepath,
+                                    template: precompiled,
+                                    opts: options.opts
+                                });
 
-                            return template;
-                        }),
-                        opts: options.opts
-                    };
+                                return template;
+                            }),
+                            opts: options.opts
+                        };
 
-                grunt.verbose.writeln(wrapperObj.templates.join(''));
+                    grunt.verbose.writeln(wrapperObj.templates.join(''));
 
-                // Write joined contents to destination filepath.
+                    // Write joined contents to destination filepath.
 
-                grunt.file.write(file.dest, libhandlebars.createWrapperFile(wrapperObj));
+                    grunt.file.write(file.dest, libhandlebars.createWrapperFile(wrapperObj));
 
-                // Print a success message.
-                grunt.log.writeln('File "' + file.dest + '" created.');
-            }, this);
-
-            done();
+                    // Print a success message.
+                    grunt.log.writeln('File "' + file.dest + '" created.');
+                }, this);
+            }
+            else {
+                grunt.verbose.writeln('Failed to find files');
+            }
         }
     );
 };

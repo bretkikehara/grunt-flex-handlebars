@@ -90,45 +90,28 @@ exports.handlebars = {
     },
     writeDefaultFile: function(test) {
         var grunt = require('grunt'),
-            actual,
-            script,
-            waitUntilGruntQueueIsClear = function() {
-                if (grunt.task._queue.length > 0) {
-                    setTimeout(waitUntilGruntQueueIsClear, 1000);
-                }
-            };
+            os = require('os'),
+            cp = require('child_process');
 
-        grunt.initConfig({
-            handlebars: {
-                compile: {
-                    options: {
-                        opts: {
-                            namespace: 'JST'
-                        }
-                    },
-                    files: {
-                        'tmp/handlebars-template.js': [
-                            'test/src/*.hbs'
-                        ]
-                    }
-                }
+        test.expect(1);
+
+        cmd = (os.platform() === 'win32' ? 'grunt.cmd' : 'grunt') + ' --verbose --gruntfile test/Gruntfile-test.js handlebars';
+        cp.exec(cmd, function(error, stdout, stderr) {
+            if (error !== null) {
+              console.log('exec error: ' + error);
             }
+
+            // load compiled script into memory.
+            GLOBAL.Handlebars = require('handlebars');
+            script = require(__dirname + '/../tmp/handlebars-template.js');
+
+            // execute compiled template
+            actual = script.JST['template-1']({
+                name: 'Bret'
+            });
+
+            test.equal(actual, '<p>Hello Bret</p>', 'Compiled default template');
+            test.done();
         });
-
-        // run grunt script
-        grunt.task.run('handlebars');
-        waitUntilGruntQueueIsClear();
-        
-        // load compiled script into memory.
-        GLOBAL.Handlebars = require('handlebars');
-        script = require(__dirname + '/../tmp/handlebars-template.js');
-
-        // execute compiled template
-        actual = script['JST']['template-1']({
-            name: 'Bret'
-        });
-
-        test.equal(actual, '<p>Hello Bret</p>', 'Compiled default template');
-        test.done();
     }
 };
