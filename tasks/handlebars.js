@@ -10,11 +10,15 @@ module.exports = function(grunt) {
     "use strict";
 
     var libhandlebars = require('./lib/handlebars-template.js'),
-        defaultOptions = {
-            separator: grunt.util.linefeed + grunt.util.linefeed,
-            compilerOptions: {
-                namespace: 'JST'     
+        Handlebars = require('Handlebars'),
+        handleFilter = function(filepath) {
+            // Remove nonexistent files (it's up to you to filter or warn here).
+            if (!grunt.file.exists(filepath)) {
+                grunt.log.warn('Source file "' + filepath + '" not found.');
+                return false;
             }
+
+            return true;
         };
 
     grunt.registerMultiTask(
@@ -22,10 +26,7 @@ module.exports = function(grunt) {
         'Compile Handlebars templates and partials using Handlebars',
         function() {
 
-            /**
-            * Define user options.
-            */
-            var options = this.options(defaultOptions);
+            var options = this.options(libhandlebars.getDefaultOptions());
             libhandlebars.init(options);
 
             grunt.verbose.writeflags(options, 'Options');
@@ -34,21 +35,25 @@ module.exports = function(grunt) {
             * Run the program.
             */
             this.files.forEach(function(file) {
-                var files = file.src.filter(function(filepath) {
-                        // Remove nonexistent files (it's up to you to filter or warn here).
-                        if (!grunt.file.exists(filepath)) {
-                            grunt.log.warn('Source file "' + filepath + '" not found.');
-                            return false;
-                        }
-
-                        return true;
-                    }),
+                var files = file.src.filter(handleFilter),
                     wrapperObj = {
                         templates: files.map(function(filepath) {
-                            var filecontent = grunt.file.read(filepath);
-                            libhandlebars.compileTemplate(filecontent, options.compilerOptions);
-                        })
+                            var filecontent = grunt.file.read(filepath),
+                                precompiled = Handlebars.precompile(Handlebars.parse(filecontent)),
+                                template;
+
+                            template = libhandlebars.createTemplateFile({
+                                filepath: filepath,
+                                template: precompiled,
+                                opts: options.opts
+                            });
+
+                            return template;
+                        }),
+                        opts: options.opts
                     };
+
+                grunt.verbose.writeln(wrapperObj.templates.join(''));
 
                 // Write joined contents to destination filepath.
 

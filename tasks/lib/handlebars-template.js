@@ -7,16 +7,29 @@
  */
 
 var Handlebars = require('handlebars'),
+    grunt = require('grunt'),
     fs = require('fs'),
+    REGEX_FILE_NAME = /^.+\/([^\/]+)\..+$/i,
     readOptions = {
         encoding: 'utf-8'
     };
 
-module.exports = {
+var libhandlebars = {
+    getDefaultOptions: function() {
+        return {
+            separator: grunt.util.linefeed + grunt.util.linefeed,
+            'helper-template-name': function(filepath) {
+                return filepath.replace(REGEX_FILE_NAME, "$1");
+            },
+            opts: {
+                namespace: 'JST'
+            }
+        };
+    },
     init: function(options) {
-        var opts = options || {
-                // default values.
-            };
+        var opts = options || libhandlebars.getDefaultOptions();
+
+        Handlebars.registerHelper('helper-template-name', opts['helper-template-name']);
 
         this.initCreateTemplateFile(opts);
         this.initCreateWrapperFile(opts);
@@ -48,19 +61,7 @@ module.exports = {
         }
 
         this.createWrapperFile = Handlebars.compile(Handlebars.parse(wrapperFileContent));
-    },
-    compileTemplate : function(fileContent, compilerOptions) {
-        if (this.isInit()) {
-            this.init();
-        }
-
-        // Read and return the file's source.
-        var fileTemplate = Handlebars.precompile(Handlebars.parse(fileContent), compilerOptions),
-            data = {
-                template: fileTemplate,
-                opts: compilerOptions
-            };
-
-        return this.createTemplateFile(data);
     }
 };
+
+module.exports = libhandlebars;

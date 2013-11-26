@@ -8,6 +8,7 @@
 
 module.exports = function(grunt) {
     "use strict";
+    var REGEX_FILE_NAME = /^.+\/([^\/]+)\..+$/i;
 
     grunt.initConfig({
         jshint: {
@@ -21,9 +22,14 @@ module.exports = function(grunt) {
         handlebars: {
             compile: {
                 options: {
-                    compilerOptions: {
+                    opts: {
                         namespace: 'JST'
                     }
+                },
+                files: {
+                    'tmp/handlebars-template.js': [
+                        'test/src/*.hbs'
+                    ]
                 }
             }
         },

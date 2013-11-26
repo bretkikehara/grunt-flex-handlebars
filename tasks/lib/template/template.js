@@ -1,1 +1,1 @@
-this["{{opts.namespace}}"]["{{opts.name}}"] = Handlebars.template({{{template}}});
+this["{{opts.namespace}}"]["{{helper-template-name filepath}}"] = Handlebars.template({{{template}}});
