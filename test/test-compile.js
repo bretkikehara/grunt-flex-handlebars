@@ -89,13 +89,20 @@ exports.handlebars = {
         test.done();
     },
     writeDefaultFile: function(test) {
-        var grunt = require('grunt'),
-            os = require('os'),
+        var os = require('os'),
             cp = require('child_process');
 
         test.expect(1);
 
-        cmd = (os.platform() === 'win32' ? 'grunt.cmd' : 'grunt') + ' --verbose --gruntfile test/Gruntfile-test.js handlebars';
+        cmd = [
+            (os.platform() === 'win32' ? 'grunt.cmd' : 'grunt'),
+            '--verbose',
+            '--gruntfile',
+            'test/Gruntfile-test.js',
+            '--base',
+            __dirname + '/../',
+            'handlebars'
+        ].join(' ');
         cp.exec(cmd, function(error, stdout, stderr) {
             if (error !== null) {
               console.log('exec error: ' + error);
