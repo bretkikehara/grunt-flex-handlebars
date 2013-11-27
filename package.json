@@ -1,23 +1,23 @@
 {
-  "name": "grunt-handlebars-template",
+  "name": "grunt-flex-handlebars",
   "description": "Precompile Handlebars templates to JST file.",
-  "version": "0.0.4",
-  "homepage": "https://github.com/bretkikehara/grunt-handlebars-template",
+  "version": "0.0.5",
+  "homepage": "https://github.com/bretkikehara/grunt-flex-handlebars",
   "author": {
     "name": "Bret K. Ikehara",
     "url": "http://www.bikehara.com/"
   },
   "repository": {
     "type": "git",
-    "url": "https://github.com/bretkikehara/grunt-handlebars-template"
+    "url": "https://github.com/bretkikehara/grunt-flex-handlebars"
   },
   "bugs": {
-    "url": "https://github.com/gruntjs/grunt-handlebars-template/issues"
+    "url": "https://github.com/gruntjs/grunt-flex-handlebars/issues"
   },
   "licenses": [
     {
       "type": "MIT",
-      "url": "https://raw.github.com/bretkikehara/grunt-handlebars-template/master/LICENSE.md"
+      "url": "https://raw.github.com/bretkikehara/grunt-flex-handlebars/master/LICENSE.md"
     }
   ],
   "engines": {

@@ -23,23 +23,23 @@ var libhandlebars = {
             templatePattern: REGEX_TEMPLATE_PATTERN,
             partialPattern: REGEX_PARTIAL_PATTERN,
             helperPattern: REGEX_HELPER_PATTERN,
-            'helper-template-name': function() {
+            'helper-template-name': (function() {
                 var pattern = this.templatePattern;
                 return function(filepath) {
                     return filepath.replace(pattern, "$1");
                 }
-            },
-            'helper-helper-name': function() {
+            }()),
+            'helper-helper-name': (function() {
                 var pattern = this.helperPattern;
                 return function(filepath) {
                     return filepath.replace(pattern, "$1");
                 }
-            },
-            'helper-partial-name': function() {
+            }()),
+            'helper-partial-name': (function() {
                 return function(name) {
                     return name;
                 }
-            },
+            }()),
             opts: {
                 namespace: 'JST'
             }
@@ -65,9 +65,9 @@ var libhandlebars = {
     init: function(options) {
         var opts = libhandlebars.getDefaultOptions(options);
 
-        Handlebars.registerHelper('helper-helper-name', opts['helper-helper-name']());
-        Handlebars.registerHelper('helper-partial-name', opts['helper-partial-name']());
-        Handlebars.registerHelper('helper-template-name', opts['helper-template-name']());
+        Handlebars.registerHelper('helper-helper-name', opts['helper-helper-name']);
+        Handlebars.registerHelper('helper-partial-name', opts['helper-partial-name']);
+        Handlebars.registerHelper('helper-template-name', opts['helper-template-name']);
 
         // create the helpers
         this.precompileHelper = this.initTemplate(opts.helperFile, __dirname + '/template/helper.js');
