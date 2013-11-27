@@ -1,1 +1,1 @@
-Y.namespace("{{opts.namespace}}")["{{opts.name}}"] = Y.Handlebars.template({{{template}}});
+Y.namespace("{{opts.namespace}}")["{{helper-template-name filepath}}"] = Y.Handlebars.template({{{template}}});
