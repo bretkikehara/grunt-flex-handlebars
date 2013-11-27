@@ -1,1 +1,1 @@
-Handlebars.registerPartial("{{name}}", this["{{opts.namespace}}"]["{{name}}"]);
+Handlebars.registerPartial("{{helper-partial-name name}}", this["{{opts.namespace}}"]["{{name}}"]);
