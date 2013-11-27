@@ -39,19 +39,51 @@ Concatenated files will be joined on this string.
 Type: `Regular Express`
 Default: `/^.+\/helper-(.+)\.hbs/i`
 
+This pattern categorizes files based on the file paths provides in the `files` grunt config. Any file matching this pattern will be assumed to be a helper.
+
+The default `helper-helper-name` helper function will use the `(.+)` value as the precompiled helper's name.
+
 #### partialPattern
 Type: `Regular Express`
 Default: `/^.+\/partial-(.+)\.hbs/i`
 
+The default `helper-partial-name` helper function will use the `(.+)` value as the precompiled partial's name.
+
 #### templatePattern
 Type: `Regular Express`
 Default: `/^.+\/template-(.+)\.hbs/i`
+
+The default `helper-template-name` helper function will use the `(.+)` value as the precompiled template's name.
+
+#### helper-helper-name
+Type: `Function`
+Default: 1st captured value defined in the `helperPattern` value.
+
+Defines the helper name.
+
+#### helper-partial-name
+Type: `Function`
+Default: 1st captured value defined in the `partialPattern` value.
+
+Defines the partial name.
+
+#### helper-template-name
+Type: `Function`
+Default: 1st captured value defined in the `templatePattern` value.
+
+Defines the template name.
 
 #### helperFile
 Type: `String`
 Default: `task/lib/template/helper.js`
 
 Handlebars template that will render the helpers.
+
+###### Helper Reserved Variables:
+
+	* helper
+	* filepath
+	* opts
 
 ###### Here is the default helper template:
 
@@ -63,6 +95,11 @@ Default: `task/lib/template/partial.js`
 
 Handlebars template that will render the partials.
 
+###### Partial Reserved Variables:
+
+	* name
+	* opts
+
 ###### Here is the default partial template:
 
 	Handlebars.registerPartial("{{helper-partial-name name}}", this["{{opts.namespace}}"]["{{name}}"]);
@@ -73,6 +110,12 @@ Default: `task/lib/template/template.js`
 
 Handlebars template that will render the templates.
 
+###### Template Reserved Variables:
+
+	* template
+	* filepath
+	* opts
+
 ###### Here is the default template template:
 
 	this["{{opts.namespace}}"]["{{helper-template-name filepath}}"] = Handlebars.template({{{template}}});
@@ -82,6 +125,13 @@ Type: `String`
 Default: `task/lib/template/wrapper.js`
 
 Handlebars template that will render the wrapper.
+
+###### Wrapper Reserved Variables:
+
+	* helpers
+	* templates
+	* partials
+	* opts
 
 ###### Here is the default wrapper template:
 
@@ -110,24 +160,11 @@ Handlebars template that will render the wrapper.
 Type: `Object`
 Default: 
 
-Options that will be passed to the underlying Handlebars template. For example, namespace can be called using {{opts.namespace}} in the generator templates.
+`opts` are options that will help precompile the Handlebars template. These are user defined variables that will be passed onto the templating. As such, there are no official recognized values.
 
-### Usage Examples
+###### Default template attribute:
 
-```js
-handlebars: {
-  compile: {
-    options: {
-      namespace: "JST"
-    },
-    files: {
-      "path/to/result.js": "path/to/source.hbs",
-      "path/to/another.js": ["path/to/sources/*.hbs", "path/to/more/*.hbs"]
-    }
-  }
-}
-```
-
+	* namespace
 
 ## Release History
 
