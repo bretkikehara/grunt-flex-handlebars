@@ -9,9 +9,9 @@
 var Handlebars = require('handlebars'),
     grunt = require('grunt'),
     fs = require('fs'),
-    REGEX_TEMPLATE_PATTERN = /^.*\/template-(.+)\.hbs/i,
-    REGEX_PARTIAL_PATTERN = /^.*\/partial-(.+)\.hbs/i,
-    REGEX_HELPER_PATTERN = /^.*\/helper-(.+)\.hbs/i,
+    REGEX_TEMPLATE_PATTERN = /^.*\/template-(.+)\.(hbs|handlebars|js)/i,
+    REGEX_PARTIAL_PATTERN = /^.*\/partial-(.+)\.(hbs|handlebars|js)/i,
+    REGEX_HELPER_PATTERN = /^.*\/helper-(.+)\.(hbs|handlebars|js)/i,
     readOptions = {
         encoding: 'utf-8'
     };
@@ -23,23 +23,15 @@ var libhandlebars = {
             templatePattern: REGEX_TEMPLATE_PATTERN,
             partialPattern: REGEX_PARTIAL_PATTERN,
             helperPattern: REGEX_HELPER_PATTERN,
-            'helper-template-name': (function() {
-                var pattern = this.templatePattern;
-                return function(filepath) {
-                    return filepath.replace(pattern, "$1");
-                }
-            }()),
-            'helper-helper-name': (function() {
-                var pattern = this.helperPattern;
-                return function(filepath) {
-                    return filepath.replace(pattern, "$1");
-                }
-            }()),
-            'helper-partial-name': (function() {
-                return function(name) {
-                    return name;
-                }
-            }()),
+            'helper-template-name': function(filepath) {
+                return filepath.replace(this.templatePattern, "$1");
+            },
+            'helper-helper-name': function(filepath) {
+                return filepath.replace(this.helperPattern, "$1");
+            },
+            'helper-partial-name': function(name) {
+                return name;
+            },
             opts: {
                 namespace: 'JST'
             }
@@ -65,9 +57,15 @@ var libhandlebars = {
     init: function(options) {
         var opts = libhandlebars.getDefaultOptions(options);
 
-        Handlebars.registerHelper('helper-helper-name', opts['helper-helper-name']);
-        Handlebars.registerHelper('helper-partial-name', opts['helper-partial-name']);
-        Handlebars.registerHelper('helper-template-name', opts['helper-template-name']);
+        Handlebars.registerHelper('helper-helper-name', function(filepath) {
+            return opts['helper-helper-name'].call(opts, filepath);
+        });
+        Handlebars.registerHelper('helper-partial-name', function(filepath) {
+            return opts['helper-partial-name'].call(opts, filepath);
+        });
+        Handlebars.registerHelper('helper-template-name', function(filepath) {
+            return opts['helper-template-name'].call(opts, filepath);
+        });
 
         // create the helpers
         this.precompileHelper = this.initTemplate(opts.helperFile, __dirname + '/template/helper.js');
