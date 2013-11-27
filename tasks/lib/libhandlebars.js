@@ -10,6 +10,7 @@ var Handlebars = require('handlebars'),
     grunt = require('grunt'),
     fs = require('fs'),
     REGEX_TEMPLATE_PATTERN = /^.+\/template-(.+)\.hbs/i,
+    REGEX_PARTIAL_PATTERN = /^.+\/partial-(.+)\.hbs/i,
     REGEX_HELPER_PATTERN = /^.+\/helper-(.+)\.hbs/i,
     readOptions = {
         encoding: 'utf-8'
@@ -20,6 +21,7 @@ var libhandlebars = {
         var defaultOptions = {
             separator: grunt.util.linefeed + grunt.util.linefeed,
             templatePattern: REGEX_TEMPLATE_PATTERN,
+            partialPattern: REGEX_PARTIAL_PATTERN,
             helperPattern: REGEX_HELPER_PATTERN,
             'helper-template-name': function() {
                 var pattern = this.templatePattern;
@@ -29,6 +31,12 @@ var libhandlebars = {
             },
             'helper-helper-name': function() {
                 var pattern = this.helperPattern;
+                return function(filepath) {
+                    return filepath.replace(pattern, "$1");
+                }
+            },
+            'helper-partial-name': function() {
+                var pattern = this.partialPattern;
                 return function(filepath) {
                     return filepath.replace(pattern, "$1");
                 }
@@ -73,9 +81,11 @@ var libhandlebars = {
         var opts = libhandlebars.getDefaultOptions(options);
 
         Handlebars.registerHelper('helper-helper-name', opts['helper-helper-name']());
+        Handlebars.registerHelper('helper-partial-name', opts['helper-partial-name']());
         Handlebars.registerHelper('helper-template-name', opts['helper-template-name']());
 
         this.initCreateHelperFile(opts);
+        this.initCreatePartialFile(opts);
         this.initCreateTemplateFile(opts);
         this.initCreateWrapperFile(opts);
 
@@ -95,6 +105,18 @@ var libhandlebars = {
         }
 
         this.createHelperFile = Handlebars.compile(Handlebars.parse(helperFileContent));
+    },
+    initCreatePartialFile: function(opts) {
+        var defaultPartial = __dirname + '/template/partial.js',
+            partialFile = opts.partialFile || defaultPartial,
+            partialFileContent = fs.readFileSync(partialFile, readOptions);
+
+        // create template handler.
+        if (!partialFileContent) {
+            partialFileContent = fs.readFileSync(defaultPartial, readOptions);
+        }
+
+        this.createPartialFile = Handlebars.compile(Handlebars.parse(partialFileContent));
     },
     initCreateTemplateFile : function(opts) {
         var defaultTemplate = __dirname + '/template/template.js',

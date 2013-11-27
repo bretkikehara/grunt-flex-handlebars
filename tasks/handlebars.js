@@ -28,6 +28,7 @@ module.exports = function(grunt) {
             if (this.files.length > 0) {
                 this.files.forEach(function(file) {
                     var helperFiles = file.src.filter(libhandlebars.patternFilter(options.helperPattern)),
+                        partialFiles = file.src.filter(libhandlebars.patternFilter(options.partialPattern)),
                         templateFiles = file.src.filter(libhandlebars.patternFilter(options.templatePattern)),
                         templateOptions = {
                             helpers: helperFiles.map(function(filepath) {
@@ -41,6 +42,22 @@ module.exports = function(grunt) {
                                 });
 
                                 return helper;
+                            }),
+                            partials: partialFiles.map(function(filepath) {
+                                var partialArray = eval(grunt.file.read(__dirname + '/../' + filepath, {
+                                        encoding: 'utf-8'
+                                    })),
+                                    out = [];
+
+                                partialArray.forEach(function(partialName) {
+                                    var data = libhandlebars.createPartialFile({
+                                        name: partialName,
+                                        opts: options.opts 
+                                    });
+                                    out.push(data);
+                                });
+
+                                return out.join('\n');
                             }),
                             templates: templateFiles.map(function(filepath) {
                                 var filecontent = grunt.file.read(filepath),
