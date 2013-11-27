@@ -27,7 +27,8 @@ exports.handlebars = {
                     namespace: 'template1',
                     name: 'hello'
                 }
-            }),
+            })
+            .replace(/\/\/.+[\r\n]*?/g, ''),
             expected = 'this["template1"]["hello"] = Handlebars.template(function() {return "hello"});';
 
         test.equal(actual, expected, 'Compiled default template');
@@ -45,6 +46,7 @@ exports.handlebars = {
                     name: 'hello'
                 }
             })
+            .replace(/\/\/.+[\r\n]*?/g, '')
             .replace(/\r|\n/g, '')
             .replace(/\t/g, ' '),
             expected = 'if (!this["template1"]) { this["template1"] = {}; } 1 2';
@@ -60,6 +62,7 @@ exports.handlebars = {
                     name: 'hello'
                 }
             })
+            .replace(/\/\/.+[\r\n]*?/g, '')
             .replace(/\r|\n/g, '')
             .replace(/\t/g, ' '),
             expected = 'Y.namespace("template1")["hello"] = Y.Handlebars.template(function() {return "hello"});';
@@ -81,6 +84,7 @@ exports.handlebars = {
                     version: '1.0.0'
                 }
             })
+            .replace(/\/\/.+[\r\n]*?/g, '')
             .replace(/\r|\n/g, '')
             .replace(/\t/g, ' '),
             expected = 'YUI.add("star-mobile", function(Y) { 1 2}, "1.0.0", { requires: [ "handlebars-base" ]});';
@@ -93,7 +97,7 @@ exports.handlebars = {
             cp = require('child_process'),
             cmd;
 
-        test.expect(3);
+        test.expect(4);
 
         cmd = [
             (os.platform() === 'win32' ? 'grunt.cmd' : 'grunt'),
@@ -138,6 +142,11 @@ exports.handlebars = {
             });
             test.equal(actual, '<p>Hello external</p>', 'Execute compiled template');
 
+            // execute with partial            
+            actual = script.JST['greeting-with-partial']({
+                name: 'Name'
+            });
+            test.equal(actual, '<p>Hello Name!</p>', 'Execute compiled template');
 
             test.done();
         });
