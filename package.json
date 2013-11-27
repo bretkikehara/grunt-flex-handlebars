@@ -1,11 +1,11 @@
 {
   "name": "grunt-handlebars-template",
   "description": "Precompile Handlebars templates to JST file.",
-  "version": "0.0.3",
-  "homepage": "",
+  "version": "0.0.4",
+  "homepage": "https://github.com/bretkikehara/grunt-handlebars-template",
   "author": {
     "name": "Bret K. Ikehara",
-    "url": "http://gruntjs.com/"
+    "url": "http://www.bikehara.com/"
   },
   "repository": {
     "type": "git",

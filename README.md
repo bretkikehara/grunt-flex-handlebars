@@ -1,4 +1,4 @@
-# grunt-handlebars-template v0.0.3
+# grunt-handlebars-template v0.0.4
 
 > Precompile Handlebars templates to JST file.
 
@@ -175,6 +175,7 @@ Default:
 
 ## Release History
 
+ * 2013-11-26   v0.0.4   Fixed support for the external templates.
  * 2013-11-26   v0.0.3   Added partial and helper support.
  * 2013-11-26   v0.0.2   First stable code to create templates.
  * 2013-11-21   v0.0.1   Refactored from grunt-contrib-handlebars into individual repo.
