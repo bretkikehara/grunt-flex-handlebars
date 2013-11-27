@@ -1,4 +1,4 @@
-# grunt-handlebars-template v0.0.4
+# grunt-handlebars-template v0.0.6
 
 > Precompile Handlebars templates to JST file.
 
@@ -44,7 +44,7 @@ Concatenated files will be joined on this string.
 
 #### helperPattern
 Type: `Regular Express`
-Default: `/^.+\/helper-(.+)\.hbs/i`
+Default: `/^.+\/helper-(.+)\.(hbs|handlebars|js)/i`
 
 This pattern categorizes files based on the file paths provides in the `files` grunt config. Any file matching this pattern will be assumed to be a helper.
 
@@ -52,13 +52,13 @@ The default `helper-helper-name` helper function will use the `(.+)` value as th
 
 #### partialPattern
 Type: `Regular Express`
-Default: `/^.+\/partial-(.+)\.hbs/i`
+Default: `/^.+\/partial-(.+)\.(hbs|handlebars|js)/i`
 
 The default `helper-partial-name` helper function will use the `(.+)` value as the precompiled partial's name.
 
 #### templatePattern
 Type: `Regular Express`
-Default: `/^.+\/template-(.+)\.hbs/i`
+Default: `/^.+\/template-(.+)\.(hbs|handlebars|js)/i`
 
 The default `helper-template-name` helper function will use the `(.+)` value as the precompiled template's name.
 
@@ -174,7 +174,8 @@ Default:
 	* namespace
 
 ## Release History
-
+ 
+ * 2013-11-27   v0.0.5   Fixed external partial support.
  * 2013-11-26   v0.0.4   Fixed support for the external templates.
  * 2013-11-26   v0.0.3   Added partial and helper support.
  * 2013-11-26   v0.0.2   First stable code to create templates.

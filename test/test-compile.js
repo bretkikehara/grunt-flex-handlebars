@@ -1,5 +1,5 @@
 /*
- * grunt-handlebars-template
+ * grunt-flex-handlebars
  * http://gruntjs.com/
  *
  * Copyright (c) 2013 Bret K. Ikehara
