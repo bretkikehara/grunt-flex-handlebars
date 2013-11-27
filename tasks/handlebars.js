@@ -35,7 +35,7 @@ module.exports = function(grunt) {
                                 var filecontent = grunt.file.read(filepath),
                                     helper;
 
-                                helper = libhandlebars.createHelperFile({
+                                helper = libhandlebars.precompileHelper({
                                     filepath: filepath,
                                     helper: filecontent,
                                     opts: options.opts
@@ -50,7 +50,7 @@ module.exports = function(grunt) {
                                     out = [];
 
                                 partialArray.forEach(function(partialName) {
-                                    var data = libhandlebars.createPartialFile({
+                                    var data = libhandlebars.precompilePartial({
                                         name: partialName,
                                         opts: options.opts 
                                     });
@@ -64,7 +64,7 @@ module.exports = function(grunt) {
                                     precompiled = Handlebars.precompile(Handlebars.parse(filecontent)),
                                     template;
 
-                                template = libhandlebars.createTemplateFile({
+                                template = libhandlebars.precompileTemplate({
                                     filepath: filepath,
                                     template: precompiled,
                                     opts: options.opts
@@ -76,7 +76,7 @@ module.exports = function(grunt) {
                         };
 
                     // Write joined contents to destination filepath.
-                    grunt.file.write(file.dest, libhandlebars.createWrapperFile(templateOptions));
+                    grunt.file.write(file.dest, libhandlebars.precompileWrapper(templateOptions));
 
                     // Print a success message.
                     grunt.log.writeln('File "' + file.dest + '" created.');

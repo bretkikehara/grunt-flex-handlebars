@@ -20,7 +20,7 @@ var libdir = __dirname + '/../tasks/lib/libhandlebars.js',
 exports.handlebars = {
     compileDefaultTemplate: function(test) {
         var libhandlebars = require(libdir).init(),
-            actual =  libhandlebars.createTemplateFile({
+            actual =  libhandlebars.precompileTemplate({
                 template: 'function() {return "hello"}',
                 filepath: 'hello',
                 opts: {
@@ -36,7 +36,7 @@ exports.handlebars = {
     },
     compileDefaultWrapper: function(test) {
         var libhandlebars = require(libdir).init(),
-            actual =  libhandlebars.createWrapperFile({
+            actual =  libhandlebars.precompileWrapper({
                 templates: [
                     '1',
                     '2'
@@ -55,7 +55,7 @@ exports.handlebars = {
     },
     compileYUITemplate: function(test) {
         var libhandlebars = require(libdir).init(yuiInit),
-            actual =  libhandlebars.createTemplateFile({
+            actual =  libhandlebars.precompileTemplate({
                 template: 'function() {return "hello"}',
                 opts: {
                     namespace: 'template1',
@@ -72,7 +72,7 @@ exports.handlebars = {
     },
     compileYUIWrapper: function(test) {
         var libhandlebars = require(libdir).init(yuiInit),
-            actual =  libhandlebars.createWrapperFile({
+            actual =  libhandlebars.precompileWrapper({
                 templates: [
                     '1',
                     '2'
@@ -110,8 +110,8 @@ exports.handlebars = {
         ].join(' ');
         cp.exec(cmd, function(error, stdout, stderr) {
 
-            console.log(stdout);
-            console.log(stderr);
+            // console.log(stdout);
+            // console.log(stderr);
 
             if (error) {
               console.log(error);

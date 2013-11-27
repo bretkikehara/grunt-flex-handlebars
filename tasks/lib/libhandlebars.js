@@ -70,10 +70,10 @@ var libhandlebars = {
         Handlebars.registerHelper('helper-template-name', opts['helper-template-name']());
 
         // create the helpers
-        this.createHelperFile = this.initTemplate(opts.helperFile, __dirname + '/template/helper.js');
-        this.createPartialFile = this.initTemplate(opts.partialFile, __dirname + '/template/partial.js');
-        this.createTemplateFile = this.initTemplate(opts.templateFile, __dirname + '/template/template.js');
-        this.createWrapperFile = this.initTemplate(opts.wrapperFile, __dirname + '/template/wrapper.js');
+        this.precompileHelper = this.initTemplate(opts.helperFile, __dirname + '/template/helper.js');
+        this.precompilePartial = this.initTemplate(opts.partialFile, __dirname + '/template/partial.js');
+        this.precompileTemplate = this.initTemplate(opts.templateFile, __dirname + '/template/template.js');
+        this.precompileWrapper = this.initTemplate(opts.wrapperFile, __dirname + '/template/wrapper.js');
 
         return this;
     },
