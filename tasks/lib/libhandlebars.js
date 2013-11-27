@@ -9,9 +9,9 @@
 var Handlebars = require('handlebars'),
     grunt = require('grunt'),
     fs = require('fs'),
-    REGEX_TEMPLATE_PATTERN = /^.+\/template-(.+)\.hbs/i,
-    REGEX_PARTIAL_PATTERN = /^.+\/partial-(.+)\.hbs/i,
-    REGEX_HELPER_PATTERN = /^.+\/helper-(.+)\.hbs/i,
+    REGEX_TEMPLATE_PATTERN = /^.*\/template-(.+)\.hbs/i,
+    REGEX_PARTIAL_PATTERN = /^.*\/partial-(.+)\.hbs/i,
+    REGEX_HELPER_PATTERN = /^.*\/helper-(.+)\.hbs/i,
     readOptions = {
         encoding: 'utf-8'
     };

@@ -22,7 +22,7 @@ exports.handlebars = {
         var libhandlebars = require(libdir).init(),
             actual =  libhandlebars.precompileTemplate({
                 template: 'function() {return "hello"}',
-                filepath: 'hello',
+                filepath: '/template-hello.hbs',
                 opts: {
                     namespace: 'template1',
                     name: 'hello'
@@ -57,9 +57,9 @@ exports.handlebars = {
         var libhandlebars = require(libdir).init(yuiInit),
             actual =  libhandlebars.precompileTemplate({
                 template: 'function() {return "hello"}',
+                filepath: '/template-hello.hbs',
                 opts: {
-                    namespace: 'template1',
-                    name: 'hello'
+                    namespace: 'template1'
                 }
             })
             .replace(/\/\/.+[\r\n]*?/g, '')
