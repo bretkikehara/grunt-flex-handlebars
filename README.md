@@ -37,15 +37,74 @@ Concatenated files will be joined on this string.
 
 #### helperPattern
 Type: `Regular Express`
-Default: /^.+\/helper-(.+)\.hbs/i
+Default: `/^.+\/helper-(.+)\.hbs/i`
 
 #### partialPattern
 Type: `Regular Express`
-Default: /^.+\/partial-(.+)\.hbs/i
+Default: `/^.+\/partial-(.+)\.hbs/i`
 
 #### templatePattern
 Type: `Regular Express`
-Default: /^.+\/template-(.+)\.hbs/i
+Default: `/^.+\/template-(.+)\.hbs/i`
+
+#### helperFile
+Type: `String`
+Default: `task/lib/template/helper.js`
+
+Handlebars template that will render the helpers.
+
+###### Here is the default helper template:
+
+	Handlebars.registerHelper("{{helper-helper-name filepath}}", {{{helper}}});
+
+#### partialFile
+Type: `String`
+Default: `task/lib/template/partial.js`
+
+Handlebars template that will render the partials.
+
+###### Here is the default partial template:
+
+	Handlebars.registerPartial("{{helper-partial-name name}}", this["{{opts.namespace}}"]["{{name}}"]);
+
+#### templateFile
+Type: `String`
+Default: `task/lib/template/template.js`
+
+Handlebars template that will render the templates.
+
+###### Here is the default template template:
+
+	this["{{opts.namespace}}"]["{{helper-template-name filepath}}"] = Handlebars.template({{{template}}});
+
+#### wrapperFile
+Type: `String`
+Default: `task/lib/template/wrapper.js`
+
+Handlebars template that will render the wrapper.
+
+###### Here is the default wrapper template:
+
+	if (!this["{{opts.namespace}}"]) { this["{{opts.namespace}}"] = {}; }
+
+	// START helpers
+	{{#each helpers}}
+		{{{.}}}
+	{{/each}}
+	// END helpers
+
+	// START templates
+	{{#each templates}}
+		{{{.}}}
+	{{/each}}
+	// END templates
+
+
+	// START partials
+	{{#each partials}}
+		{{{.}}}
+	{{/each}}
+	// END partials
 
 #### opts
 Type: `Object`
@@ -72,6 +131,7 @@ handlebars: {
 
 ## Release History
 
+ * 2013-11-26   v0.0.3   Added partial and helper support.
  * 2013-11-26   v0.0.2   First stable code to create templates.
  * 2013-11-21   v0.0.1   Refactored from grunt-contrib-handlebars into individual repo.
 
