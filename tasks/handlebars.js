@@ -44,7 +44,7 @@ module.exports = function(grunt) {
                                 return helper;
                             }),
                             partials: partialFiles.map(function(filepath) {
-                                var partialArray = eval(grunt.file.read(__dirname + '/../' + filepath, {
+                                var partialArray = eval(grunt.file.read(filepath, {
                                         encoding: 'utf-8'
                                     })),
                                     out = [];
