@@ -36,9 +36,8 @@ var libhandlebars = {
                 }
             },
             'helper-partial-name': function() {
-                var pattern = this.partialPattern;
-                return function(filepath) {
-                    return filepath.replace(pattern, "$1");
+                return function(name) {
+                    return name;
                 }
             },
             opts: {
@@ -63,6 +62,35 @@ var libhandlebars = {
 
         return defaultOptions;
     },
+    init: function(options) {
+        var opts = libhandlebars.getDefaultOptions(options);
+
+        Handlebars.registerHelper('helper-helper-name', opts['helper-helper-name']());
+        Handlebars.registerHelper('helper-partial-name', opts['helper-partial-name']());
+        Handlebars.registerHelper('helper-template-name', opts['helper-template-name']());
+
+        // create the helpers
+        this.createHelperFile = this.initTemplate(opts.helperFile, __dirname + '/template/helper.js');
+        this.createPartialFile = this.initTemplate(opts.partialFile, __dirname + '/template/partial.js');
+        this.createTemplateFile = this.initTemplate(opts.templateFile, __dirname + '/template/template.js');
+        this.createWrapperFile = this.initTemplate(opts.wrapperFile, __dirname + '/template/wrapper.js');
+
+        return this;
+    },
+    isInit: function() {
+        return !!(this.createTemplateFile);
+    },
+    initTemplate: function(filepath,  defaultFile) {
+        var file = filepath || defaultFile,
+            content = fs.readFileSync(file, readOptions);
+
+        // create template handler.
+        if (!content) {
+            content = fs.readFileSync(defaultFile, readOptions);
+        }
+
+        return Handlebars.compile(Handlebars.parse(content));
+    },
     patternFilter: function(pattern) {
         return function(filepath) {
             // Remove nonexistent files (it's up to you to filter or warn here).
@@ -76,70 +104,6 @@ var libhandlebars = {
 
             return true;
         };
-    },
-    init: function(options) {
-        var opts = libhandlebars.getDefaultOptions(options);
-
-        Handlebars.registerHelper('helper-helper-name', opts['helper-helper-name']());
-        Handlebars.registerHelper('helper-partial-name', opts['helper-partial-name']());
-        Handlebars.registerHelper('helper-template-name', opts['helper-template-name']());
-
-        this.initCreateHelperFile(opts);
-        this.initCreatePartialFile(opts);
-        this.initCreateTemplateFile(opts);
-        this.initCreateWrapperFile(opts);
-
-        return this;
-    },
-    isInit: function() {
-        return !!(this.createTemplateFile);
-    },
-    initCreateHelperFile: function(opts) {
-        var defaultHelper = __dirname + '/template/helper.js',
-            helperFile = opts.helperFile || defaultHelper,
-            helperFileContent = fs.readFileSync(helperFile, readOptions);
-
-        // create template handler.
-        if (!helperFileContent) {
-            helperFileContent = fs.readFileSync(defaultPartial, readOptions);
-        }
-
-        this.createHelperFile = Handlebars.compile(Handlebars.parse(helperFileContent));
-    },
-    initCreatePartialFile: function(opts) {
-        var defaultPartial = __dirname + '/template/partial.js',
-            partialFile = opts.partialFile || defaultPartial,
-            partialFileContent = fs.readFileSync(partialFile, readOptions);
-
-        // create template handler.
-        if (!partialFileContent) {
-            partialFileContent = fs.readFileSync(defaultPartial, readOptions);
-        }
-
-        this.createPartialFile = Handlebars.compile(Handlebars.parse(partialFileContent));
-    },
-    initCreateTemplateFile : function(opts) {
-        var defaultTemplate = __dirname + '/template/template.js',
-            templateFile = opts.templateFile || defaultTemplate,
-            templateFileContent = fs.readFileSync(templateFile, readOptions);
-
-        // create template handler.
-        if (!templateFileContent) {
-            templateFileContent = fs.readFileSync(defaultTemplate, readOptions);
-        }
-
-        this.createTemplateFile = Handlebars.compile(Handlebars.parse(templateFileContent));
-    },
-    initCreateWrapperFile : function(opts) {
-        var defaultWrapper = __dirname + '/template/wrapper.js',
-            wrapperFile = opts.wrapperFile || defaultWrapper,
-            wrapperFileContent = fs.readFileSync(wrapperFile, readOptions);
-
-        if (!wrapperFileContent) {
-            wrapperFileContent = fs.readFileSync(defaultWrapper, readOptions);
-        }
-
-        this.createWrapperFile = Handlebars.compile(Handlebars.parse(wrapperFileContent));
     }
 };
 
