@@ -26,7 +26,7 @@ grunt.loadNpmTasks('grunt-handlebars-template');
 
 This uses Handlebars to precompile Handlebars templates. O_o o_O
 
-Fundamentally, the grunt-contrib-handlebars was flawed because any new option would need to be added to the code. Not only would this continue to increase the code complexity, but it would mean that users are left to wait until a certain option was done. In the end, the user may need to compile their own subset just to add missing functionality.
+Fundamentally, the grunt-contrib-handlebars was flawed because any new option would need to be added to the code. Not only would this continue to increase the code complexity, but it would mean that users are left to wait until a certain option was added to the main plugin. In the end, the user may need to compile their own version just to add missing functionality.
 
 This tool tries to eradicate the need to continually upgrade the tool when a new option is needed by controlling the precompiled output by using Handlebar templates. This tool precompiles the templates, then passes on the neccessary values to a template to create the precompiled file.
 
