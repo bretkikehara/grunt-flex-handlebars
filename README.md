@@ -1,4 +1,4 @@
-# grunt-flex-handlebars v0.1.0
+# grunt-flex-handlebars v0.1.1
 
 > Precompile Handlebars templates to JST file.
 
@@ -175,6 +175,7 @@ Default:
 
 ## Release History
  
+ * 2013-12-02   v0.1.1   Fixed letter-case for Handlebars library.
  * 2013-11-28   v0.1.0   Bumped version to indicate public release.
  * 2013-11-27   v0.0.6   Fixed external partial support.
  * 2013-11-26   v0.0.4   Fixed support for the external templates.

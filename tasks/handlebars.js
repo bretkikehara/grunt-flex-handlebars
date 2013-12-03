@@ -10,7 +10,7 @@ module.exports = function(grunt) {
     "use strict";
 
     var libhandlebars = require('./lib/libhandlebars.js'),
-        Handlebars = require('Handlebars');
+        Handlebars = require('handlebars');
 
     grunt.registerMultiTask(
         'handlebars',
