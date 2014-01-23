@@ -9,7 +9,7 @@
 var Handlebars = require('handlebars'),
     grunt = require('grunt'),
     fs = require('fs'),
-    REGEX_TEMPLATE_PATTERN = /^.*\/template-(.+)\.(hbs|handlebars|js)/i,
+    REGEX_TEMPLATE_PATTERN = /^.*\/template-(.+)\.(hbs|handlebars|js|html)/i,
     REGEX_PARTIAL_PATTERN = /^.*\/partial-(.+)\.(hbs|handlebars|js)/i,
     REGEX_HELPER_PATTERN = /^.*\/helper-(.+)\.(hbs|handlebars|js)/i,
     readOptions = {
