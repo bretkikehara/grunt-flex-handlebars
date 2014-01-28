@@ -12,6 +12,7 @@ var Handlebars = require('handlebars'),
     REGEX_TEMPLATE_PATTERN = /^.*\/template[-\\\/](.+)\.(hbs|handlebars|js|html)/i,
     REGEX_PARTIAL_PATTERN = /^.*\/partial[-\\\/](.+)\.(hbs|handlebars|js)/i,
     REGEX_HELPER_PATTERN = /^.*\/helper[-\\\/](.+)\.(hbs|handlebars|js)/i,
+    REGEX_PATH_SEPARATOR_PATTERN = /[\\\/]/g,
     readOptions = {
         encoding: 'utf-8'
     };
@@ -24,10 +25,10 @@ var libhandlebars = {
             partialPattern: REGEX_PARTIAL_PATTERN,
             helperPattern: REGEX_HELPER_PATTERN,
             'helper-template-name': function(filepath) {
-                return filepath.replace(this.templatePattern, "$1");
+                return filepath.replace(this.templatePattern, "$1").replace(REGEX_PATH_SEPARATOR_PATTERN, '.');
             },
             'helper-helper-name': function(filepath) {
-                return filepath.replace(this.helperPattern, "$1");
+                return filepath.replace(this.helperPattern, "$1").replace(REGEX_PATH_SEPARATOR_PATTERN, '.');
             },
             'helper-partial-name': function(name) {
                 return name;
