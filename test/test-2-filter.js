@@ -9,11 +9,11 @@
 var grunt = require('grunt'),
 	libdir = __dirname + '/../tasks/lib',
     liboptions = require(libdir + '/options.js'),
-    libtemplate = require(libdir + '/template.js'),
+    libprecompile = require(libdir + '/precompile.js'),
     libfilter = require(libdir + '/filter.js'),
     options = liboptions.get(),
-    compiler = libtemplate.get(options),
-    filter = libfilter.get(grunt, compiler, options);
+    precompiler = libprecompile.get(grunt, options),
+    filter = libfilter.get(grunt, options);
 
 exports.filter = {
 	testHelperPattern: function (test) {
@@ -23,7 +23,7 @@ exports.filter = {
 				'test/src/helper-dummy.hbs': true
 			};
 
-		helperFiles = filter.pattern(files, options.helperPattern);
+		helperFiles = filter.match(files, options.helperPattern);
 
 		test.expect(2);
 
@@ -39,7 +39,7 @@ exports.filter = {
 				'test/src/partial-list.hbs': true
 			};
 
-		helperFiles = filter.pattern(files, options.partialPattern);
+		helperFiles = filter.match(files, options.partialPattern);
 
 		test.expect(1);
 
@@ -58,7 +58,7 @@ exports.filter = {
 				'test/src/template-greeting-without-helper.hbs': true
 			};
 
-		helperFiles = filter.pattern(files, options.templatePattern);
+		helperFiles = filter.match(files, options.templatePattern);
 
 		test.expect(4);
 		helperFiles.forEach(function(value, index) {
