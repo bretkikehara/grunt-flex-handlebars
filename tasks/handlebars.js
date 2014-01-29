@@ -10,7 +10,7 @@ module.exports = function(grunt) {
     "use strict";
 
     var liboptions = require('./lib/options.js'),
-        libtemplate = require('./lib/template.js'),
+        libprecompile = require('./lib/precompile.js'),
         libfilter = require('./lib/filter.js'),
         Handlebars = require('handlebars');
 
@@ -19,8 +19,8 @@ module.exports = function(grunt) {
         'Compile Handlebars templates and partials using Handlebars',
         function() {
             var options = liboptions.get(this.options()),
-                compiler = libtemplate.get(options),
-                filter = libfilter.get(grunt, compiler, options);
+                precompiler = libprecompile.get(grunt, options),
+                filter = libfilter.get(grunt, options);
 
             grunt.verbose.writeflags(options, 'Options');
 
@@ -35,20 +35,20 @@ module.exports = function(grunt) {
                         partialContent,
                         templateFiles,
                         templateContent,
-                        wrapperContent;
+                        precompiledContent;
 
                     // sort the files
-                    helperFiles = filter.pattern(file.src, options.helperPattern);
-                    partialFiles = filter.pattern(file.src, options.partialPattern);
-                    templateFiles = filter.pattern(file.src, options.templatePattern);
+                    helperFiles = filter.match(file.src, options.helperPattern);
+                    partialFiles = filter.match(file.src, options.partialPattern);
+                    templateFiles = filter.match(file.src, options.templatePattern);
 
                     // precompile each file, then return all the precompiled content as one string
-                    helperContent = helperFiles.map(filter.helper);
-                    partialContent = partialFiles.map(filter.partial);
-                    templateContent = templateFiles.map(filter.template);
+                    helperContent = precompiler.precompile(helperFiles, 'helper');
+                    partialContent = precompiler.precompile(partialFiles, 'partial');
+                    templateContent = precompiler.precompile(templateFiles, 'template');
 
                     // wrap the precompiled content
-                    wrapperContent = compiler.wrapper({
+                    precompiledContent = precompiler.wrap({
                         helpers: helperContent,
                         partials: partialContent,
                         templates: templateContent,
@@ -56,7 +56,7 @@ module.exports = function(grunt) {
                     });
 
                     // Write joined contents to destination filepath.
-                    grunt.file.write(file.dest, wrapperContent);
+                    grunt.file.write(file.dest, precompiledContent);
 
                     // Print a success message.
                     grunt.log.writeln('File "' + file.dest + '" created.');
