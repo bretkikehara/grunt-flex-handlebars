@@ -1,3 +1,11 @@
+/*
+ * grunt-handlebars-template
+ * http://gruntjs.com/
+ *
+ * Copyright (c) 2013 Bret K. Ikehara
+ * Licensed under the MIT license.
+ */
+
 exports.run = {
     writeDefaultFile: function(test) {
         var os = require('os'),
@@ -13,11 +21,11 @@ exports.run = {
         test.expect(4);
         cp.exec(cmd, function(error, stdout, stderr) {
 
-            console.log(stdout);
-            console.log(stderr);
+            // console.log(stdout);
+            // console.log(stderr);
 
             if (error) {
-              console.log(error);
+                console.log(error);
             }
 
             // load compiled script into memory.
