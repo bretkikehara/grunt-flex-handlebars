@@ -1,7 +1,7 @@
 {
   "name": "grunt-flex-handlebars",
   "description": "Precompile Handlebars templates to JST file.",
-  "version": "0.1.2",
+  "version": "0.1.3",
   "homepage": "https://github.com/bretkikehara/grunt-flex-handlebars",
   "author": {
     "name": "Bret K. Ikehara",
