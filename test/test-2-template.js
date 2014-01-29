@@ -5,7 +5,9 @@
  * Copyright (c) 2013 Bret K. Ikehara
  * Licensed under the MIT license.
  */
-var libdir = __dirname + '/../tasks/lib/libhandlebars.js',
+var libdir = __dirname + '/../tasks/lib',
+    liboptions = require(libdir + '/options.js'),
+    libtemplate = require(libdir + '/template.js'),
     fs = require('fs'),
     writeOptions = {
         encoding: 'utf-8'
@@ -15,12 +17,11 @@ var libdir = __dirname + '/../tasks/lib/libhandlebars.js',
         wrapperFile: __dirname + '/template/yui-wrapper.js',
     };
 
-
-
-exports.handlebars = {
+exports.template = {
     compileDefaultTemplate: function(test) {
-        var libhandlebars = require(libdir).init(),
-            actual =  libhandlebars.precompileTemplate({
+        var options = liboptions.get(),
+            compiler = libtemplate.get(options),
+            actual =  compiler.template({
                 template: 'function() {return "hello"}',
                 filepath: '/template-hello.hbs',
                 opts: {
@@ -35,8 +36,9 @@ exports.handlebars = {
         test.done();
     },
     compileDefaultWrapper: function(test) {
-        var libhandlebars = require(libdir).init(),
-            actual =  libhandlebars.precompileWrapper({
+        var options = liboptions.get(),
+            compiler = libtemplate.get(options),
+            actual =  compiler.wrapper({
                 templates: [
                     '1',
                     '2'
@@ -54,8 +56,9 @@ exports.handlebars = {
         test.done();
     },
     compileYUITemplate: function(test) {
-        var libhandlebars = require(libdir).init(yuiInit),
-            actual =  libhandlebars.precompileTemplate({
+        var options = liboptions.get(yuiInit),
+            compiler = libtemplate.get(options),
+            actual =  compiler.template({
                 template: 'function() {return "hello"}',
                 filepath: '/template-hello.hbs',
                 opts: {
@@ -71,8 +74,9 @@ exports.handlebars = {
         test.done();
     },
     compileYUIWrapper: function(test) {
-        var libhandlebars = require(libdir).init(yuiInit),
-            actual =  libhandlebars.precompileWrapper({
+        var options = liboptions.get(yuiInit),
+            compiler = libtemplate.get(options),
+            actual =  compiler.wrapper({
                 templates: [
                     '1',
                     '2'
@@ -91,64 +95,5 @@ exports.handlebars = {
 
         test.equal(actual, expected, 'Compiled default template');
         test.done();
-    },
-    writeDefaultFile: function(test) {
-        var os = require('os'),
-            cp = require('child_process'),
-            cmd;
-
-        test.expect(4);
-
-        cmd = [
-            (os.platform() === 'win32' ? 'grunt.cmd' : 'grunt'),
-            '--verbose',
-            '--gruntfile',
-            'test/Gruntfile-test.js',
-            '--base',
-            __dirname + '/../',
-            'handlebars'
-        ].join(' ');
-        cp.exec(cmd, function(error, stdout, stderr) {
-
-            // console.log(stdout);
-            // console.log(stderr);
-
-            if (error) {
-              console.log(error);
-            }
-
-            // load compiled script into memory.
-            GLOBAL.Handlebars = require('handlebars');
-            script = require(__dirname + '/../tmp/handlebars-template.js');
-
-            // execute without helper
-            actual = script.JST['greeting-without-helper']({
-                name: 'Name'
-            });
-            test.equal(actual, '<p>Hello Name</p>', 'Execute compiled template');
-
-            // execute with internal helper
-            actual = script.JST['greeting-with-helper']({
-                name: 'Name'
-            });
-            test.equal(actual, '<p>Hello Name!</p>', 'Execute compiled template');
-
-            // execute with external helper (Example: https://github.com/assemble/handlebars-helpers)
-            Handlebars.registerHelper('external-view-name', function(name) {
-                return 'external';
-            });
-            actual = script.JST['greeting-with-external-helper']({
-                name: 'Name'
-            });
-            test.equal(actual, '<p>Hello external</p>', 'Execute compiled template');
-
-            // execute with partial            
-            actual = script.JST['greeting-with-partial']({
-                name: 'Name'
-            });
-            test.equal(actual, '<p>Hello Name!</p>', 'Execute compiled template');
-
-            test.done();
-        });
     }
 };
