@@ -9,16 +9,18 @@
 module.exports = function(grunt) {
     "use strict";
 
-    var libhandlebars = require('./lib/libhandlebars.js'),
+    var liboptions = require('./lib/options.js'),
+        libprecompile = require('./lib/precompile.js'),
+        libfilter = require('./lib/filter.js'),
         Handlebars = require('handlebars');
 
     grunt.registerMultiTask(
         'handlebars',
         'Compile Handlebars templates and partials using Handlebars',
         function() {
-
-            var options = libhandlebars.getDefaultOptions(this.options());
-            libhandlebars.init(options);
+            var options = liboptions.get(this.options()),
+                precompiler = libprecompile.get(grunt, options),
+                filter = libfilter.get(grunt, options);
 
             grunt.verbose.writeflags(options, 'Options');
 
@@ -27,56 +29,34 @@ module.exports = function(grunt) {
             */
             if (this.files.length > 0) {
                 this.files.forEach(function(file) {
-                    var helperFiles = file.src.filter(libhandlebars.patternFilter(options.helperPattern)),
-                        partialFiles = file.src.filter(libhandlebars.patternFilter(options.partialPattern)),
-                        templateFiles = file.src.filter(libhandlebars.patternFilter(options.templatePattern)),
-                        templateOptions = {
-                            helpers: helperFiles.map(function(filepath) {
-                                var filecontent = grunt.file.read(filepath),
-                                    helper;
+                    var helperFiles,
+                        helperContent,
+                        partialFiles,
+                        partialContent,
+                        templateFiles,
+                        templateContent,
+                        precompiledContent;
 
-                                helper = libhandlebars.precompileHelper({
-                                    filepath: filepath,
-                                    helper: filecontent,
-                                    opts: options.opts
-                                });
+                    // sort the files
+                    helperFiles = filter.match(file.src, options.helperPattern);
+                    partialFiles = filter.match(file.src, options.partialPattern);
+                    templateFiles = filter.match(file.src, options.templatePattern);
 
-                                return helper;
-                            }),
-                            partials: partialFiles.map(function(filepath) {
-                                var partialArray = eval(grunt.file.read(filepath, {
-                                        encoding: 'utf-8'
-                                    })),
-                                    out = [];
+                    // precompile each file, then return all the precompiled content as one string
+                    helperContent = precompiler.precompile(helperFiles, 'helper');
+                    partialContent = precompiler.precompile(partialFiles, 'partial');
+                    templateContent = precompiler.precompile(templateFiles, 'template');
 
-                                partialArray.forEach(function(partialName) {
-                                    var data = libhandlebars.precompilePartial({
-                                        name: partialName,
-                                        opts: options.opts 
-                                    });
-                                    out.push(data);
-                                });
-
-                                return out.join('\n');
-                            }),
-                            templates: templateFiles.map(function(filepath) {
-                                var filecontent = grunt.file.read(filepath),
-                                    precompiled = Handlebars.precompile(Handlebars.parse(filecontent)),
-                                    template;
-
-                                template = libhandlebars.precompileTemplate({
-                                    filepath: filepath,
-                                    template: precompiled,
-                                    opts: options.opts
-                                });
-
-                                return template;
-                            }),
-                            opts: options.opts
-                        };
+                    // wrap the precompiled content
+                    precompiledContent = precompiler.wrap({
+                        helpers: helperContent,
+                        partials: partialContent,
+                        templates: templateContent,
+                        opts: options.opts
+                    });
 
                     // Write joined contents to destination filepath.
-                    grunt.file.write(file.dest, libhandlebars.precompileWrapper(templateOptions));
+                    grunt.file.write(file.dest, precompiledContent);
 
                     // Print a success message.
                     grunt.log.writeln('File "' + file.dest + '" created.');

@@ -19,7 +19,7 @@ module.exports = function(grunt) {
                 },
                 files: {
                     'tmp/handlebars-template.js': [
-                        'test/src/*.hbs'
+                        'src/*.hbs'
                     ]
                 }
             }
