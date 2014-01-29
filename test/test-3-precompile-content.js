@@ -5,9 +5,10 @@
  * Copyright (c) 2013 Bret K. Ikehara
  * Licensed under the MIT license.
  */
-var libdir = __dirname + '/../tasks/lib',
+var grunt = require('grunt'),
+    libdir = __dirname + '/../tasks/lib',
     liboptions = require(libdir + '/options.js'),
-    libtemplate = require(libdir + '/template.js'),
+    libprecompile = require(libdir + '/precompile.js'),
     fs = require('fs'),
     writeOptions = {
         encoding: 'utf-8'
@@ -20,8 +21,8 @@ var libdir = __dirname + '/../tasks/lib',
 exports.template = {
     compileDefaultTemplate: function(test) {
         var options = liboptions.get(),
-            compiler = libtemplate.get(options),
-            actual =  compiler.template({
+            compiler = libprecompile.get(grunt, options),
+            actual =  compiler.precompileTemplate({
                 template: 'function() {return "hello"}',
                 filepath: '/template-hello.hbs',
                 opts: {
@@ -37,8 +38,8 @@ exports.template = {
     },
     compileDefaultWrapper: function(test) {
         var options = liboptions.get(),
-            compiler = libtemplate.get(options),
-            actual =  compiler.wrapper({
+            compiler = libprecompile.get(grunt, options),
+            actual =  compiler.wrap({
                 templates: [
                     '1',
                     '2'
@@ -57,8 +58,8 @@ exports.template = {
     },
     compileYUITemplate: function(test) {
         var options = liboptions.get(yuiInit),
-            compiler = libtemplate.get(options),
-            actual =  compiler.template({
+            compiler = libprecompile.get(grunt, options),
+            actual =  compiler.precompileTemplate({
                 template: 'function() {return "hello"}',
                 filepath: '/template-hello.hbs',
                 opts: {
@@ -75,8 +76,8 @@ exports.template = {
     },
     compileYUIWrapper: function(test) {
         var options = liboptions.get(yuiInit),
-            compiler = libtemplate.get(options),
-            actual =  compiler.wrapper({
+            compiler = libprecompile.get(grunt, options),
+            actual =  compiler.wrap({
                 templates: [
                     '1',
                     '2'

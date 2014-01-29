@@ -6,6 +6,8 @@
  * Licensed under the MIT license.
  */
 
+GLOBAL.Handlebars = require('handlebars');
+
 exports.run = {
     writeDefaultFile: function(test) {
         var os = require('os'),
@@ -15,8 +17,11 @@ exports.run = {
                 '--verbose',
                 '--gruntfile',
                 'test/Gruntfile-test.js',
+                '--basedir',
+                __dirname,
                 'handlebars'
             ].join(' ');
+
 
         test.expect(4);
         cp.exec(cmd, function(error, stdout, stderr) {
@@ -29,7 +34,6 @@ exports.run = {
             }
 
             // load compiled script into memory.
-            GLOBAL.Handlebars = require('handlebars');
             script = require('./tmp/handlebars-template.js');
 
             // execute without helper
