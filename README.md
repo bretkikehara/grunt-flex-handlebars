@@ -40,11 +40,11 @@ Task targets, files and options may be specified according to the grunt [Configu
 Type: `String`  
 Default: `linefeed + linefeed`
 
-Concatenated files will be joined on this string.
+Concatenated files will be joined on this string. Same value as Node.JS os.EOL value.
 
 #### helperPattern
 Type: `Regular Express`
-Default: `/^.+\/helper-(.+)\.(hbs|handlebars|js)/i`
+Default: `/^.+\/helper[-\\\/](.+)\.(hbs|handlebars|js)/i`
 
 This pattern categorizes files based on the file paths provides in the `files` grunt config. Any file matching this pattern will be assumed to be a helper.
 
@@ -52,13 +52,13 @@ The default `helper-helper-name` helper function will use the `(.+)` value as th
 
 #### partialPattern
 Type: `Regular Express`
-Default: `/^.+\/partial-(.+)\.(hbs|handlebars|js)/i`
+Default: `/^.+\/partial[-\\\/](.+)\.(hbs|handlebars|js)/i`
 
 The default `helper-partial-name` helper function will use the `(.+)` value as the precompiled partial's name.
 
 #### templatePattern
 Type: `Regular Express`
-Default: `/^.+\/template-(.+)\.(hbs|handlebars|js)/i`
+Default: `/^.+\/template[-\\\/](.+)\.(hbs|handlebars|js|html)/i`
 
 The default `helper-template-name` helper function will use the `(.+)` value as the precompiled template's name.
 
@@ -175,6 +175,8 @@ Default:
 
 ## Release History
  
+ * 2013-01-28   v0.2.0   Refactored the code to be more modular.
+ * 2014-01-28   v0.1.3   Added support for better file handling.
  * 2013-12-02   v0.1.1   Fixed letter-case for Handlebars library.
  * 2013-11-28   v0.1.0   Bumped version to indicate public release.
  * 2013-11-27   v0.0.6   Fixed external partial support.
