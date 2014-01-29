@@ -42,11 +42,9 @@ module.exports = {
             precompilePartial: this.initTemplate(options.partialFile),
             precompileTemplate: this.initTemplate(options.templateFile),
             precompile: function (files, handlerType) {
-                var content;
                 if (handlerType){
-                    content = '';
                     if (handlerType === 'helper') {
-                        content = files.map(function(filepath) {
+                        return files.map(function(filepath) {
                             var filecontent = grunt.file.read(filepath),
                                 helper;
 
@@ -60,7 +58,7 @@ module.exports = {
                         }, this);
                     }
                     else if (handlerType === 'partial') {
-                        content = files.map(function(filepath) {
+                        return files.map(function(filepath) {
                             try {
                                 var partialArray = eval(grunt.file.read(filepath, {
                                         encoding: 'utf-8'
@@ -84,7 +82,7 @@ module.exports = {
                         }, this);
                     }
                     else if (handlerType === 'template') {
-                        content = files.map(function(filepath) {
+                        return files.map(function(filepath) {
                             var filecontent = grunt.file.read(filepath),
                                 precompiled = Handlebars.precompile(Handlebars.parse(filecontent)),
                                 template;
@@ -98,8 +96,6 @@ module.exports = {
                             return template;
                         }, this);
                     }
-
-                    return content.join(options.separator);
                 }
 
                 return null;
