@@ -1,4 +1,4 @@
-# grunt-flex-handlebars v0.1.1
+# grunt-flex-handlebars v0.2.0
 
 > Precompile Handlebars templates to JST file.
 
