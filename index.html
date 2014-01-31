@@ -1,0 +1,293 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <meta charset='utf-8'>
+    <meta http-equiv="X-UA-Compatible" content="chrome=1">
+    <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
+    <link href='https://fonts.googleapis.com/css?family=Architects+Daughter' rel='stylesheet' type='text/css'>
+    <link rel="stylesheet" type="text/css" href="stylesheets/stylesheet.css" media="screen" />
+    <link rel="stylesheet" type="text/css" href="stylesheets/pygment_trac.css" media="screen" />
+    <link rel="stylesheet" type="text/css" href="stylesheets/print.css" media="print" />
+
+    <!--[if lt IE 9]>
+    <script src="//html5shiv.googlecode.com/svn/trunk/html5.js"></script>
+    <![endif]-->
+
+    <title>Grunt-flex-handlebars by bretkikehara</title>
+  </head>
+
+  <body>
+    <header>
+      <div class="inner">
+        <h1>Grunt-flex-handlebars</h1>
+        <h2>Grunt plugin that compiles Handlebars template using Handlebars.</h2>
+        <a href="https://github.com/bretkikehara/grunt-flex-handlebars" class="button"><small>View project on</small>GitHub</a>
+      </div>
+    </header>
+
+    <div id="content-wrapper">
+      <div class="inner clearfix">
+        <section id="main-content">
+          <h1>
+<a name="grunt-flex-handlebars-v011" class="anchor" href="#grunt-flex-handlebars-v011"><span class="octicon octicon-link"></span></a>grunt-flex-handlebars v0.1.1</h1>
+
+<blockquote>
+<p>Precompile Handlebars templates to JST file.</p>
+</blockquote>
+
+<h2>
+<a name="getting-started" class="anchor" href="#getting-started"><span class="octicon octicon-link"></span></a>Getting Started</h2>
+
+<p>This plugin requires Grunt <code>~0.4.0</code></p>
+
+<p>If you haven't used <a href="http://gruntjs.com/">Grunt</a> before, be sure to check out the <a href="http://gruntjs.com/getting-started">Getting Started</a> guide, as it explains how to create a <a href="http://gruntjs.com/sample-gruntfile">Gruntfile</a> as well as install and use Grunt plugins. Once you're familiar with that process, you may install this plugin with this command:</p>
+
+<pre lang="shell"><code>npm install grunt-flex-handlebars --save-dev
+</code></pre>
+
+<p>Once the plugin has been installed, it may be enabled inside your Gruntfile with this line of JavaScript:</p>
+
+<div class="highlight highlight-js"><pre><span class="nx">grunt</span><span class="p">.</span><span class="nx">loadNpmTasks</span><span class="p">(</span><span class="s1">'grunt-flex-handlebars'</span><span class="p">);</span>
+</pre></div>
+
+<p><em>This plugin was designed to work with Grunt 0.4.x. If you're still using grunt v0.3.x it's strongly recommended that <a href="http://gruntjs.com/upgrading-from-0.3-to-0.4">you upgrade</a>, but in case you can't please use <a href="https://github.com/gruntjs/grunt-flex-handlebars/tree/grunt-0.3-stable">v0.3.3</a>.</em></p>
+
+<h2>
+<a name="why-is-this-tool-different-from-other-handlebars-compiler" class="anchor" href="#why-is-this-tool-different-from-other-handlebars-compiler"><span class="octicon octicon-link"></span></a>Why is this tool different from other handlebars compiler?</h2>
+
+<p>This uses Handlebars to precompile Handlebars templates. O_o o_O</p>
+
+<p>Fundamentally, the grunt-contrib-handlebars was flawed because any new option would need to be added to the code. Not only would this continue to increase the code complexity, but it would mean that users are left to wait until a certain option was added to the main plugin. In the end, the user may need to compile their own version just to add missing functionality.</p>
+
+<p>This tool tries to eradicate the need to continually upgrade the tool when a new option is needed by controlling the precompiled output by using Handlebar templates. This tool precompiles the templates, then passes on the neccessary values to a template to create the precompiled file.</p>
+
+<h2>
+<a name="handlebars-task" class="anchor" href="#handlebars-task"><span class="octicon octicon-link"></span></a>Handlebars task</h2>
+
+<p><em>Run this task with the <code>grunt handlebars</code> command.</em></p>
+
+<p>Task targets, files and options may be specified according to the grunt <a href="http://gruntjs.com/configuring-tasks">Configuring tasks</a> guide.</p>
+
+<h3>
+<a name="options" class="anchor" href="#options"><span class="octicon octicon-link"></span></a>Options</h3>
+
+<h4>
+<a name="separator" class="anchor" href="#separator"><span class="octicon octicon-link"></span></a>separator</h4>
+
+<p>Type: <code>String</code><br>
+Default: <code>linefeed + linefeed</code></p>
+
+<p>Concatenated files will be joined on this string. Same value as Node.JS os.EOL value.</p>
+
+<h4>
+<a name="helperpattern" class="anchor" href="#helperpattern"><span class="octicon octicon-link"></span></a>helperPattern</h4>
+
+<p>Type: <code>Regular Express</code>
+Default: <code>/^.+\/helper[-\\\/](.+)\.(hbs|handlebars|js)/i</code></p>
+
+<p>This pattern categorizes files based on the file paths provides in the <code>files</code> grunt config. Any file matching this pattern will be assumed to be a helper.</p>
+
+<p>The default <code>helper-helper-name</code> helper function will use the <code>(.+)</code> value as the precompiled helper's name.</p>
+
+<h4>
+<a name="partialpattern" class="anchor" href="#partialpattern"><span class="octicon octicon-link"></span></a>partialPattern</h4>
+
+<p>Type: <code>Regular Express</code>
+Default: <code>/^.+\/partial[-\\\/](.+)\.(hbs|handlebars|js)/i</code></p>
+
+<p>The default <code>helper-partial-name</code> helper function will use the <code>(.+)</code> value as the precompiled partial's name.</p>
+
+<h4>
+<a name="templatepattern" class="anchor" href="#templatepattern"><span class="octicon octicon-link"></span></a>templatePattern</h4>
+
+<p>Type: <code>Regular Express</code>
+Default: <code>/^.+\/template[-\\\/](.+)\.(hbs|handlebars|js|html)/i</code></p>
+
+<p>The default <code>helper-template-name</code> helper function will use the <code>(.+)</code> value as the precompiled template's name.</p>
+
+<h4>
+<a name="helper-helper-name" class="anchor" href="#helper-helper-name"><span class="octicon octicon-link"></span></a>helper-helper-name</h4>
+
+<p>Type: <code>Function</code>
+Default: 1st captured value defined in the <code>helperPattern</code> value.</p>
+
+<p>Defines the helper name.</p>
+
+<h4>
+<a name="helper-partial-name" class="anchor" href="#helper-partial-name"><span class="octicon octicon-link"></span></a>helper-partial-name</h4>
+
+<p>Type: <code>Function</code>
+Default: 1st captured value defined in the <code>partialPattern</code> value.</p>
+
+<p>Defines the partial name.</p>
+
+<h4>
+<a name="helper-template-name" class="anchor" href="#helper-template-name"><span class="octicon octicon-link"></span></a>helper-template-name</h4>
+
+<p>Type: <code>Function</code>
+Default: 1st captured value defined in the <code>templatePattern</code> value.</p>
+
+<p>Defines the template name.</p>
+
+<h4>
+<a name="helperfile" class="anchor" href="#helperfile"><span class="octicon octicon-link"></span></a>helperFile</h4>
+
+<p>Type: <code>String</code>
+Default: <code>task/lib/template/helper.js</code></p>
+
+<p>Handlebars template that will render the helpers.</p>
+
+<h6>
+<a name="helper-reserved-variables" class="anchor" href="#helper-reserved-variables"><span class="octicon octicon-link"></span></a>Helper Reserved Variables:</h6>
+
+<pre><code>* helper
+* filepath
+* opts
+</code></pre>
+
+<h6>
+<a name="here-is-the-default-helper-template" class="anchor" href="#here-is-the-default-helper-template"><span class="octicon octicon-link"></span></a>Here is the default helper template:</h6>
+
+<pre><code>Handlebars.registerHelper("{{helper-helper-name filepath}}", {{{helper}}});
+</code></pre>
+
+<h4>
+<a name="partialfile" class="anchor" href="#partialfile"><span class="octicon octicon-link"></span></a>partialFile</h4>
+
+<p>Type: <code>String</code>
+Default: <code>task/lib/template/partial.js</code></p>
+
+<p>Handlebars template that will render the partials.</p>
+
+<h6>
+<a name="partial-reserved-variables" class="anchor" href="#partial-reserved-variables"><span class="octicon octicon-link"></span></a>Partial Reserved Variables:</h6>
+
+<pre><code>* name
+* opts
+</code></pre>
+
+<h6>
+<a name="here-is-the-default-partial-template" class="anchor" href="#here-is-the-default-partial-template"><span class="octicon octicon-link"></span></a>Here is the default partial template:</h6>
+
+<pre><code>Handlebars.registerPartial("{{helper-partial-name name}}", this["{{opts.namespace}}"]["{{name}}"]);
+</code></pre>
+
+<h4>
+<a name="templatefile" class="anchor" href="#templatefile"><span class="octicon octicon-link"></span></a>templateFile</h4>
+
+<p>Type: <code>String</code>
+Default: <code>task/lib/template/template.js</code></p>
+
+<p>Handlebars template that will render the templates.</p>
+
+<h6>
+<a name="template-reserved-variables" class="anchor" href="#template-reserved-variables"><span class="octicon octicon-link"></span></a>Template Reserved Variables:</h6>
+
+<pre><code>* template
+* filepath
+* opts
+</code></pre>
+
+<h6>
+<a name="here-is-the-default-template-template" class="anchor" href="#here-is-the-default-template-template"><span class="octicon octicon-link"></span></a>Here is the default template template:</h6>
+
+<pre><code>this["{{opts.namespace}}"]["{{helper-template-name filepath}}"] = Handlebars.template({{{template}}});
+</code></pre>
+
+<h4>
+<a name="wrapperfile" class="anchor" href="#wrapperfile"><span class="octicon octicon-link"></span></a>wrapperFile</h4>
+
+<p>Type: <code>String</code>
+Default: <code>task/lib/template/wrapper.js</code></p>
+
+<p>Handlebars template that will render the wrapper.</p>
+
+<h6>
+<a name="wrapper-reserved-variables" class="anchor" href="#wrapper-reserved-variables"><span class="octicon octicon-link"></span></a>Wrapper Reserved Variables:</h6>
+
+<pre><code>* helpers
+* templates
+* partials
+* opts
+</code></pre>
+
+<h6>
+<a name="here-is-the-default-wrapper-template" class="anchor" href="#here-is-the-default-wrapper-template"><span class="octicon octicon-link"></span></a>Here is the default wrapper template:</h6>
+
+<pre><code>if (!this["{{opts.namespace}}"]) { this["{{opts.namespace}}"] = {}; }
+
+// START helpers
+{{#each helpers}}
+    {{{.}}}
+{{/each}}
+// END helpers
+
+// START templates
+{{#each templates}}
+    {{{.}}}
+{{/each}}
+// END templates
+
+
+// START partials
+{{#each partials}}
+    {{{.}}}
+{{/each}}
+// END partials
+</code></pre>
+
+<h4>
+<a name="opts" class="anchor" href="#opts"><span class="octicon octicon-link"></span></a>opts</h4>
+
+<p>Type: <code>Object</code>
+Default: </p>
+
+<p><code>opts</code> are options that will help precompile the Handlebars template. These are user defined variables that will be passed onto the templating. As such, there are no official recognized values.</p>
+
+<h6>
+<a name="default-template-attribute" class="anchor" href="#default-template-attribute"><span class="octicon octicon-link"></span></a>Default template attribute:</h6>
+
+<pre><code>* namespace
+</code></pre>
+
+<h2>
+<a name="release-history" class="anchor" href="#release-history"><span class="octicon octicon-link"></span></a>Release History</h2>
+
+<ul>
+<li>2013-01-28   v0.2.0   Refactored the code to be more modular.</li>
+<li>2014-01-28   v0.1.3   Added support for better file handling.</li>
+<li>2013-12-02   v0.1.1   Fixed letter-case for Handlebars library.</li>
+<li>2013-11-28   v0.1.0   Bumped version to indicate public release.</li>
+<li>2013-11-27   v0.0.6   Fixed external partial support.</li>
+<li>2013-11-26   v0.0.4   Fixed support for the external templates.</li>
+<li>2013-11-26   v0.0.3   Added partial and helper support.</li>
+<li>2013-11-26   v0.0.2   First stable code to create templates.</li>
+<li>2013-11-21   v0.0.1   Refactored from grunt-contrib-handlebars into individual repo.</li>
+</ul><hr><h2>
+<a name="original-source" class="anchor" href="#original-source"><span class="octicon octicon-link"></span></a>Original Source</h2>
+
+<p>Author: <a href="http://tbranyen.com">Tim Branyen</a></p>
+
+<p>Source for the original code can be found at <a href="https://github.com/gruntjs/grunt-contrib-handlebars">https://github.com/gruntjs/grunt-contrib-handlebars</a>.</p>
+        </section>
+
+        <aside id="sidebar">
+          <a href="https://github.com/bretkikehara/grunt-flex-handlebars/zipball/master" class="button">
+            <small>Download</small>
+            .zip file
+          </a>
+          <a href="https://github.com/bretkikehara/grunt-flex-handlebars/tarball/master" class="button">
+            <small>Download</small>
+            .tar.gz file
+          </a>
+
+          <p class="repo-owner"><a href="https://github.com/bretkikehara/grunt-flex-handlebars"></a> is maintained by <a href="https://github.com/bretkikehara">bretkikehara</a>.</p>
+
+          <p>This page was generated by <a href="https://pages.github.com">GitHub Pages</a> using the Architect theme by <a href="https://twitter.com/jasonlong">Jason Long</a>.</p>
+        </aside>
+      </div>
+    </div>
+
+  
+  </body>
+</html>
