@@ -175,7 +175,7 @@ Default:
 
 ## Release History
  
- * 2013-01-28   v0.2.0   Refactored the code to be more modular.
+ * 2014-01-28   v0.2.0   Refactored the code to be more modular.
  * 2014-01-28   v0.1.3   Added support for better file handling.
  * 2013-12-02   v0.1.1   Fixed letter-case for Handlebars library.
  * 2013-11-28   v0.1.0   Bumped version to indicate public release.
