@@ -80,6 +80,12 @@ Default: 1st captured value defined in the `templatePattern` value.
 
 Defines the template name.
 
+#### allTemplatesArePartials
+Type: `Boolean`
+Default: false
+
+Defines whether to treat all template files as partials.
+
 #### helperFile
 Type: `String`
 Default: `task/lib/template/helper.js`
@@ -175,6 +181,7 @@ Default:
 
 ## Release History
  
+ * 2014-04-16	v0.2.1   Added `allTemplatesArePartials` option.
  * 2014-01-28   v0.2.0   Refactored the code to be more modular.
  * 2014-01-28   v0.1.3   Added support for better file handling.
  * 2013-12-02   v0.1.1   Fixed letter-case for Handlebars library.
