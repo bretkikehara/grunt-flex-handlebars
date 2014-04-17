@@ -59,25 +59,36 @@ module.exports = {
                     }
                     else if (handlerType === 'partial') {
                         return files.map(function(filepath) {
-                            try {
-                                var partialArray = eval(grunt.file.read(filepath, {
-                                        encoding: 'utf-8'
-                                    })),
-                                    out = [];
+                            var partialArray,
+                                out;
 
-                                partialArray.forEach(function(partialName) {
-                                    var data = this.precompilePartial({
-                                        name: partialName,
-                                        opts: options.opts 
-                                    });
-                                    out.push(data);
-                                }, this);
-
-                                return out.join('\n');
+                            if (options.allTemplatesArePartials) {
+                                return this.precompilePartial({
+                                    filepath: filepath,
+                                    opts: options.opts 
+                                });
                             }
-                            catch(e) {
-                                grunt.log.warn('Failed to parse the partial file!\nPlease ensure the partial is in an array format.');
-                                grunt.log.warn(e);
+                            else {
+                                try {
+                                    partialArray = eval(grunt.file.read(filepath, {
+                                        encoding: 'utf-8'
+                                    }));
+                                    out = [];
+                                    partialArray.forEach(function(partialName) {
+                                        var data = this.precompilePartial({
+                                            filepath: filepath,
+                                            name: partialName,
+                                            opts: options.opts 
+                                        });
+                                        out.push(data);
+                                    }, this);
+
+                                    return out.join('\n');
+                                }
+                                catch(e) {
+                                    grunt.log.warn('Failed to parse the partial file!\nPlease ensure the partial is in an array format.');
+                                    grunt.log.warn(e);
+                                }
                             }
                         }, this);
                     }

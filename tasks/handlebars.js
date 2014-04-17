@@ -39,7 +39,12 @@ module.exports = function(grunt) {
 
                     // sort the files
                     helperFiles = filter.match(file.src, options.helperPattern);
-                    partialFiles = filter.match(file.src, options.partialPattern);
+                    if (options.allTemplatesArePartials) {
+                        partialFiles = filter.match(file.src, options.templatePattern);
+                    }
+                    else {
+                        partialFiles = filter.match(file.src, options.partialPattern);
+                    }
                     templateFiles = filter.match(file.src, options.templatePattern);
 
                     // precompile each file, then return all the precompiled content as one string

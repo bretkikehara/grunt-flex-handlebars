@@ -65,7 +65,8 @@ module.exports = {
             helperFile: __dirname + '/template/helper.js',
             partialFile: __dirname + '/template/partial.js',
             templateFile: __dirname + '/template/template.js',
-            wrapperFile: __dirname + '/template/wrapper.js'
+            wrapperFile: __dirname + '/template/wrapper.js',
+            allTemplatesArePartials: false
         };
     }   
 };
